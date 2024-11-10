@@ -11,10 +11,22 @@ export const Form = () => {
     password: "",
   });
   const [data, setData] = useState([]);
+  const getData = async ()=>{
+    try{
+      let response = await axios.get('http://localhost:8080/user')
+      let alldata = response.data.resdata.map((element, index)=>{
+        return{
+          ...element,
+          ...response.data.userdata[index]
+        }
+      })
+      setData(response.data)
+    }catch(error){
+      console.log(error);
+    }
+  }
   useEffect(()=>{
-    axios.get('http://localhost:8080/user')
-    .then(response => setData(response.data))
-    .catch(error => console.error('Error fetching data:', error));
+    getData();
   },[])
   
   console.log(data.userdata);
@@ -101,10 +113,10 @@ export const Form = () => {
             
           {data.map(([data])=>[]
             return <tr>
-            <td>{[data.userdata.name]}</td>
-            <td>{data.userdata.address}</td>
-            <td>{data.resdata.email}</td>
-            <td>{data.resdata.password}</td>
+            <td>{data.name}</td>
+            <td>{data.address}</td>
+            <td>{data.email}</td>
+            <td>{data.password}</td>
           </tr>
           })}
           
